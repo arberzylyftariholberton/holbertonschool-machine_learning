@@ -3,6 +3,8 @@
 
 
 class Poisson:
+    """ Testing Documentation """
+
     def __init__(self, data=None, lambtha=1.):
         """
         A class with constructor that represents a Poisson distribution
