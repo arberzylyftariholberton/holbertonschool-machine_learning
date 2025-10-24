@@ -5,7 +5,7 @@
 class Binomial:
     def __init__(self, data=None, n=1, p=0.5):
         """
-        A function inside a class that returns a Binomial distribution
+        A class that represents a Binomial distribution
         """
         if data is None:
             if n <= 0:
