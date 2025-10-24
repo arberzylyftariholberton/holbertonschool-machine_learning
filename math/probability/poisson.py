@@ -29,18 +29,18 @@ class Poisson:
         Return PMF value for k
         """
         k = int(k)
-        
+
         if k < 0:
             return 0
-        
+
         e = 2.7182818285
-        
+
         factorial = 1
         for i in range(1, k + 1):
             factorial *= i
-        
-        pmf_successes = (e ** (-self.lambtha)) * (self.lambtha ** k) / factorial
-        
+
+        pmf_successes = (e ** (-self.lambtha))*(self.lambtha ** k) / factorial
+
         return pmf_successes
 
     def cdf(self, k):
