@@ -3,11 +3,11 @@
 
 
 class Poisson:
-    """ Testing Documentation """
+    """ A class with constructor that represents a Poisson distribution """
 
     def __init__(self, data=None, lambtha=1.):
         """
-        A class with constructor that represents a Poisson distribution
+        Function with constructor that returns a Poisson distribution
         """
 
         if data is None:
@@ -23,6 +23,26 @@ class Poisson:
 
             self.lambtha = float(sum(data) / len(data))
 
+    def pmf(self, k):
+        """
+        Calculates the PMF for a given number of successes
+        Return PMF value for k
+        """
+        k = int(k)
+        
+        if k < 0:
+            return 0
+        
+        e = 2.7182818285
+        
+        factorial = 1
+        for i in range(1, k + 1):
+            factorial *= i
+        
+        pmf_successes = (e ** (-self.lambtha)) * (self.lambtha ** k) / factorial
+        
+        return pmf_successes
+
     def cdf(self, k):
         """
         A function that calculates the CDF for a given number of successes
@@ -33,7 +53,7 @@ class Poisson:
             return 0
 
         e = 2.7182818285
-        cdf_s = 0
+        cdf_successes = 0
 
         for i in range(k + 1):
             factorial = 1
@@ -41,6 +61,6 @@ class Poisson:
                 factorial *= j
 
             pmf = (e ** (-self.lambtha)) * (self.lambtha ** i) / factorial
-            cdf_s += pmf
+            cdf_successes += pmf
 
-        return cdf_s
+        return cdf_successes
