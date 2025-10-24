@@ -31,7 +31,7 @@ class Poisson:
             return 0
 
         e = 2.7182818285
-        cdf_value = 0
+        cdf_s = 0
 
         for i in range(k + 1):
             factorial = 1
@@ -39,6 +39,6 @@ class Poisson:
                 factorial *= j
 
             pmf = (e ** (-self.lambtha)) * (self.lambtha ** i) / factorial
-            cdf_value += pmf
+            cdf_s += pmf
 
-        return cdf_value
+        return cdf_s
