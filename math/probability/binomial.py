@@ -43,6 +43,7 @@ class Binomial:
             return 0
 
         def factorial(x):
+        """ Function  for factorial"""
             if x == 0 or x == 1:
                 return 1
             f = 1
