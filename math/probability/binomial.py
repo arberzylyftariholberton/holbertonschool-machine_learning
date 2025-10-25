@@ -31,3 +31,27 @@ class Binomial:
 
             self.n = round(n_round)
             self.p = mean / self.n
+
+    def pmf(self, k):
+        """
+        Calculates the Probability Mass Function (PMF)
+        for a given number of successes k.
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0 or k > self.n:
+            return 0
+
+        def factorial(x):
+            if x == 0 or x == 1:
+                return 1
+            f = 1
+            for i in range(2, x + 1):
+                f *= i
+            return f
+
+        # Combination: C(n, k) = n! / (k! * (n - k)!)
+        comb = factorial(self.n) / (factorial(k) * factorial(self.n - k))
+
+        # PMF: C(n, k) * p^k * (1 - p)^(n - k)
+        return comb * (self.p ** k) * ((1 - self.p) ** (self.n - k))
