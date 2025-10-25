@@ -3,6 +3,7 @@
 
 
 class Binomial:
+    """ Class with constructor for a Binomial distribution"""
     def __init__(self, data=None, n=1, p=0.5):
         """
         A class that represents a Binomial distribution
@@ -42,7 +43,7 @@ class Binomial:
         if k < 0 or k > self.n:
             return 0
 
-        def factorial(x): 
+        def factorial(x):
             """ Function  for factorial """
             if x == 0 or x == 1:
                 return 1
