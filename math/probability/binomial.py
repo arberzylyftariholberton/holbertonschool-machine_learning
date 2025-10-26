@@ -57,3 +57,30 @@ class Binomial:
 
         # PMF: C(n, k) * p^k * (1 - p)^(n - k)
         return comb * (self.p ** k) * ((1 - self.p) ** (self.n - k))
+
+    def cdf(self, k):
+        """
+        Calculate the cumulative distribution function (CDF) for a given
+        number of successes k.
+
+        Args:
+            k (int or float): Number of successes
+
+        Returns:
+            float: CDF value for k
+        """
+
+        k = int(k)
+
+        if k < 0:
+            return 0
+
+        if k >= self.n:
+            return 1
+
+        total = 0
+
+        for i in range(0, k + 1):
+            total += self.pmf(i)
+
+        return total
