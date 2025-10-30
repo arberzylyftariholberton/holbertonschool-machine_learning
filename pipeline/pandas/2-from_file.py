@@ -9,3 +9,4 @@ def from_file(filename, delimiter):
     Function that return loaded data from a file as a pd.DataFrame
     """
     return pd.read_csv(filename, delimiter=delimiter)
+    
