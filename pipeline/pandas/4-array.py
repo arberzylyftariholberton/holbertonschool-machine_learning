@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """ A script that converts pandas DataFrame input into numpy array."""
 
-import pandas as pd
-
 
 def array(df):
     """
