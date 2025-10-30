@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import pandas as pd
+
 """ A script that takes a pandas pd.DataFrame as an input
     and performs a modification in this input. """
+
+import pandas as pd
 
 
 def rename(df):
