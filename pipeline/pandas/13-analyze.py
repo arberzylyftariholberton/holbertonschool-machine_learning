@@ -2,8 +2,6 @@
 """ A script that computes descriptive statistics
     for all columns except the Timestamp column"""
 
-import pandas as pd
-
 
 def analyze(df):
     """
