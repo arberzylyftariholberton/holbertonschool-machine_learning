@@ -10,7 +10,7 @@ from_file = __import__('2-from_file').from_file
 
 def visualize():
     """
-    A function that returns a transformed DataFrame 
+    A function that returns a transformed DataFrame
     """
 
     df = from_file('coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv', ',')
