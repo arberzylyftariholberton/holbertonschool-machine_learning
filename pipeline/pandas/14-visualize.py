@@ -49,3 +49,10 @@ def visualize():
     plt.show()
 
     return daily_Intervals
+
+
+if __name__ == "__main__":
+    df_daily = visualize()
+    print(df_daily.head())
+    print(df_daily.tail())
+    print(df_daily.shape)
