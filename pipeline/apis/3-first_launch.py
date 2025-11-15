@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-A script that displays the first SpaceX launch with details.
-"""
+""" A script that displays the first SpaceX launch with details. """
 import requests
 
 
