@@ -6,6 +6,10 @@ import requests
 
 
 def first_launch():
+    """
+    A function that returns the first SpaceX launch
+    """
+
     launches = requests.get(
         "https://api.spacexdata.com/v4/launches"
     ).json()
