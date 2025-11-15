@@ -12,7 +12,11 @@ def first_launch():
         "https://api.spacexdata.com/v4/launches/upcoming"
     ).json()
 
-    launches.sort(key=lambda l : l.get("date_unix", float("inf")))
+    def sort_key(launch):
+        """ Sorting key using date_unix """
+        return launch.get("date_unix", float("inf"))
+
+    launches.sort(key=sort_key)
 
     first = launches[0] if launches else None
 
