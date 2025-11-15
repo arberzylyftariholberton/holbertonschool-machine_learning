@@ -11,12 +11,12 @@ def first_launch():
     """
 
     launches = requests.get(
-        "https://api.spacexdata.com/v4/launches"
+        "https://api.spacexdata.com/v4/launches/upcoming"
     ).json()
 
     launches.sort(key=lambda l: l.get("date_unix", float("inf")))
 
-    first = launches[0]
+    first = launches[0] if launches else None
 
     return first
 
