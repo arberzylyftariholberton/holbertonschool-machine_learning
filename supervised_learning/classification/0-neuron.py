@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import numpy as np
 
+
 class Neuron:
     """
     A class that defines a single neuron performing binary classification
     """
-
 
     def __init__(self, nx):
         """
