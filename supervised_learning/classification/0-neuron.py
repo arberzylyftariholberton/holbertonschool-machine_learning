@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Performs a Single Neuron binary classification"""
 import numpy as np
 
 
