@@ -31,7 +31,7 @@ class NeuralNetwork:
         self.A1 = 0
         self.W2 = np.random.randn(1, nodes)
         self.b2 = 0
-        self.A2 = 0
+        self.A2 = 0 
 
         @property
         def W1(self):
@@ -48,7 +48,7 @@ class NeuralNetwork:
             return self.__b1
 
         @property
-        def A1(sef):
+        def A1(self):
             """
             Getter function of The activated output for the hidden layer
             """
