@@ -110,27 +110,21 @@ class DeepNeuralNetwork:
         return prediction, cost_value
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        """
-        Calculates one pass of gradient descent on the neural network
-        """
         m = Y.shape[1]
         weights_copy = self.__weights.copy()
 
         for layer in range(self.__L, 0, -1):
-            A = cache[f"A{layer}"]
-            A_prev = cache[f"A{layer - 1}"]
-            W = weights_copy[f"W{layer}"]
+            A = cache["A{}".format(layer)]
+            A_prev = cache["A{}".format(layer - 1)]
 
             if layer == self.__L:
                 dZ = A - Y
             else:
-                dZ = (np.matmul(
-                    weights_copy[f"W{layer + 1}"].T, dZ)
-                    * (A * (1 - A))
-                )
+                dZ = (np.matmul(weights_copy["W{}".format(layer + 1)].T, dZ)
+                      * (A * (1 - A)))
 
             dW = (1 / m) * np.matmul(dZ, A_prev.T)
             db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
-            self.__weights[f"W{layer}"] -= alpha * dW
-            self.__weights[f"b{layer}"] -= alpha * db
+            self.__weights["W{}".format(layer)] -= alpha * dW
+            self.__weights["b{}".format(layer)] -= alpha * db
