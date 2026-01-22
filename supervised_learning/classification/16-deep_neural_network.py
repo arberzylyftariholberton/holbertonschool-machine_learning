@@ -34,11 +34,10 @@ class DeepNeuralNetwork:
         self.weights = {}
 
         for layer in range(1, self.L + 1):
-            layers_nodes = layers[layer - 1]
-            previous_nodes = nx if layer == 1 else layers[layer-2]
+            prev = nx if layer == 1 else layers[layer - 2]
+            nodes = layers[layer - 1]
 
-            self.weights[f"W{layer}"] = (
-                np.random.randn(layers_nodes, previous_nodes)
-                * np.sqrt(2 / previous_nodes)
+            self.weights["W{}".format(layer)] = (
+                np.random.randn(nodes, prev) * np.sqrt(2 / prev)
             )
-            self.weights[f"b{layer}"] = np.zeros((layers_nodes, 1))
+            self.weights["b{}".format(layer)] = np.zeros((nodes, 1))
