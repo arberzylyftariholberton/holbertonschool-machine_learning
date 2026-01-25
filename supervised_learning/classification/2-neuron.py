@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-"""Neuron Forward Propagation"""
+"""
+Defines a Neuron class with forward propagation for binary classification.
+"""
 import numpy as np
 
 
 class Neuron:
     """
-    A class that defines a single neuron performing binary
-    classification having private instances atributes and a
-    forward propagation function
+    Defines a single neuron that performs binary classification
+    with private instance attributes and forward propagation.
     """
 
     def __init__(self, nx):
         """
-        A constructor that takes number of input as nx
+        Initializes a Neuron instance.
+
+        Parameters:
+            nx (int): Number of input features to the neuron.
+
+        Raises:
+            TypeError: If nx is not an integer.
+            ValueError: If nx is less than 1.
         """
 
         if type(nx) is not int:
@@ -27,7 +35,7 @@ class Neuron:
     @property
     def W(self):
         """
-        Getter function of the Weight
+        Retrieves the weights vector of the neuron.
         """
 
         return self.__W
@@ -35,7 +43,7 @@ class Neuron:
     @property
     def b(self):
         """
-        Getter function of the bias
+        Retrieves the bias value of the neuron.
         """
 
         return self.__b
@@ -43,14 +51,21 @@ class Neuron:
     @property
     def A(self):
         """
-        Getter function of the activated output
+        Retrieves the activated output of the neuron.
         """
 
         return self.__A
 
     def forward_prop(self, X):
         """
-        A function that calculates the forward propagation of the neuron
+        Calculates the forward propagation of the neuron using
+        a sigmoid activation function.
+
+        Parameters:
+            X (numpy.ndarray): Input data of shape (nx, m).
+
+        Returns:
+            numpy.ndarray: The activated output of the neuron.
         """
         Z = np.matmul(self.__W, X) + self.__b
 
