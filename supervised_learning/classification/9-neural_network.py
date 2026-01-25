@@ -1,21 +1,36 @@
 #!/usr/bin/env python3
-"""Privatizing a Neural Network binary classification"""
-
+"""Defines a Neural Network for binary classification with private attributes."""
 import numpy as np
 
 
 class NeuralNetwork:
     """
-    A class that defines a Neural Network performing binary classification,
-    adding private instance attributes
+    Represents a neural network with one hidden layer for binary classification,
+    using private instance attributes for encapsulation.
     """
 
     def __init__(self, nx, nodes):
         """
-        A constructor that takes number of input as nx and
-        nodes is the number of nodes found in the hidden layer
-        """
+        Initializes a NeuralNetwork instance with one hidden layer.
 
+        Parameters:
+            nx (int): Number of input features.
+            nodes (int): Number of nodes in the hidden layer.
+
+        Raises:
+            TypeError: If nx is not an integer.
+            ValueError: If nx is less than 1.
+            TypeError: If nodes is not an integer.
+            ValueError: If nodes is less than 1.
+
+        Private Attributes:
+            __W1 (numpy.ndarray): Weights for the hidden layer, initialized randomly.
+            __b1 (numpy.ndarray): Biases for the hidden layer, initialized to zeros.
+            __A1 (float): Activated outputs for the hidden layer, initialized to 0.
+            __W2 (numpy.ndarray): Weights for the output neuron, initialized randomly.
+            __b2 (float): Bias for the output neuron, initialized to 0.
+            __A2 (float): Activated output for the output neuron (prediction), initialized to 0.
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -36,41 +51,41 @@ class NeuralNetwork:
     @property
     def W1(self):
         """
-        Getter function of the Weight vector for the hidden layer
+        Getter for the weight matrix of the hidden layer.
         """
         return self.__W1
 
     @property
     def b1(self):
         """
-        Getter function of The bias for the hidden layer
+        Getter for the bias vector of the hidden layer.
         """
         return self.__b1
 
     @property
     def A1(self):
         """
-        Getter function of The activated output for the hidden layer
+        Getter for the activated output of the hidden layer.
         """
         return self.__A1
 
     @property
     def W2(self):
         """
-        Getter function of the Weight vector for the output neuron
+        Getter for the weight vector of the output neuron.
         """
         return self.__W2
 
     @property
     def b2(self):
         """
-        Getter function of The bias for the output neuron
+        Getter for the bias of the output neuron.
         """
         return self.__b2
 
     @property
     def A2(self):
         """
-        Getter function of The activated output for the output neuron
+        Getter for the activated output (prediction) of the output neuron.
         """
         return self.__A2
