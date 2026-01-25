@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
-"""Calculates the cost of the model using logistic regression"""
+"""
+Defines a Neuron class with forward propagation and cost calculation
+for binary classification using logistic regression.
+"""
 import numpy as np
 
 
 class Neuron:
     """
-    A class that defines a single neuron performing binary
-    classification having private instances atributes,
-    a forward propagation function,
-    a cost calculation function using logistic regression
+    Represents a single neuron for binary classification with:
+    - Private instance attributes
+    - Forward propagation
+    - Logistic regression cost computation
     """
 
     def __init__(self, nx):
         """
-        A constructor that takes number of input as nx
+        Initializes a Neuron instance.
+
+        Parameters:
+            nx (int): Number of input features to the neuron.
+
+        Raises:
+            TypeError: If nx is not an integer.
+            ValueError: If nx is less than 1.
         """
 
         if type(nx) is not int:
@@ -28,7 +38,7 @@ class Neuron:
     @property
     def W(self):
         """
-        Getter function of the Weight
+        Retrieves the weights vector of the neuron.
         """
 
         return self.__W
@@ -36,7 +46,7 @@ class Neuron:
     @property
     def b(self):
         """
-        Getter function of the bias
+        Retrieves the bias value of the neuron.
         """
 
         return self.__b
@@ -44,14 +54,21 @@ class Neuron:
     @property
     def A(self):
         """
-        Getter function of the activated output
+        Retrieves the activated output of the neuron.
         """
 
         return self.__A
 
     def forward_prop(self, X):
         """
-        A function that calculates the forward propagation of the neuron
+        Performs forward propagation of the neuron using a sigmoid
+        activation function.
+
+        Parameters:
+            X (numpy.ndarray): Input data of shape (nx, m).
+
+        Returns:
+            numpy.ndarray: Activated output of the neuron.
         """
         Z = np.matmul(self.__W, X) + self.__b
 
@@ -61,10 +78,15 @@ class Neuron:
 
     def cost(self, Y, A):
         """
-        A function that calculates the cost of the model
-        using logistic regression
-        """
+        Computes the cost of the neuron using logistic regression.
 
+        Parameters:
+            Y (numpy.ndarray): Correct labels of shape (1, m).
+            A (numpy.ndarray): Activated outputs of shape (1, m).
+
+        Returns:
+            float: Logistic regression cost.
+        """
         m = Y.shape[1]
 
         log_loss = -1/m*np.sum(Y * np.log(A) + (1 - Y)*(np.log(1.0000001 - A)))
