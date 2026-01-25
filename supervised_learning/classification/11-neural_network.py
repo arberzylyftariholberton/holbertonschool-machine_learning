@@ -1,24 +1,37 @@
 #!/usr/bin/env python3
 """
-   A script that Calculates the cost of the model
-   using logistic regression
+Defines a Neural Network for binary classification with one hidden layer,
+including forward propagation and cost calculation using logistic regression.
 """
-
 import numpy as np
 
 
 class NeuralNetwork:
     """
-    A class that defines a Neural Network performing binary classification,
-    adding private instance attributes
+    Represents a neural network with a single hidden layer for binary classification,
+    using private instance attributes for weights, biases, and activated outputs.
     """
 
     def __init__(self, nx, nodes):
         """
-        A constructor that takes number of input as nx and
-        nodes is the number of nodes found in the hidden layer
-        """
+        Initializes a NeuralNetwork instance with one hidden layer.
 
+        Parameters:
+            nx (int): Number of input features.
+            nodes (int): Number of nodes in the hidden layer.
+
+        Raises:
+            TypeError: If nx or nodes is not an integer.
+            ValueError: If nx or nodes is less than 1.
+
+        Private Attributes:
+            __W1 (numpy.ndarray): Weights for the hidden layer, initialized randomly.
+            __b1 (numpy.ndarray): Biases for the hidden layer, initialized to zeros.
+            __A1 (float): Activated outputs for the hidden layer, initialized to 0.
+            __W2 (numpy.ndarray): Weights for the output neuron, initialized randomly.
+            __b2 (float): Bias for the output neuron, initialized to 0.
+            __A2 (float): Activated output for the output neuron (prediction), initialized to 0.
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -38,68 +51,73 @@ class NeuralNetwork:
 
     @property
     def W1(self):
-        """
-        Getter function of the Weight vector for the hidden layer
-        """
+        """Getter for the weight matrix of the hidden layer."""
         return self.__W1
 
     @property
     def b1(self):
-        """
-        Getter function of The bias for the hidden layer
-        """
+        """Getter for the bias vector of the hidden layer."""
         return self.__b1
 
     @property
     def A1(self):
-        """
-        Getter function of The activated output for the hidden layer
-        """
+        """Getter for the activated output of the hidden layer."""
         return self.__A1
 
     @property
     def W2(self):
-        """
-        Getter function of the Weight vector for the output neuron
-        """
+        """Getter for the weight vector of the output neuron."""
         return self.__W2
 
     @property
     def b2(self):
-        """
-        Getter function of The bias for the output neuron
-        """
+        """Getter for the bias of the output neuron."""
         return self.__b2
 
     @property
     def A2(self):
-        """
-        Getter function of The activated output for the output neuron
-        """
+        """Getter for the activated output (prediction) of the output neuron."""
         return self.__A2
 
     def forward_prop(self, X):
         """
-        A function that Calculates the forward propagation
-        of the neural network
+        Performs forward propagation through the neural network.
+
+        Parameters:
+            X (numpy.ndarray): Input data of shape (nx, m), where nx is the number
+                               of input features and m is the number of examples.
+
+        Updates:
+            __A1: Activated outputs of the hidden layer using a sigmoid function.
+            __A2: Activated output of the output neuron using a sigmoid function.
+
+        Returns:
+            tuple: (__A1, __A2)
+                - __A1 (numpy.ndarray): Activated outputs of the hidden layer.
+                - __A2 (numpy.ndarray): Activated output of the output neuron.
         """
         Z1 = np.matmul(self.__W1, X) + self.__b1
-
         self.__A1 = 1 / (1 + np.exp(-Z1))
 
         Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
-
         self.__A2 = 1 / (1 + np.exp(-Z2))
 
         return self.__A1, self.__A2
 
     def cost(self, Y, A):
         """
-        A Function that Calculates the cost of the model
-        using logistic regression
+        Calculates the cost of the neural network using logistic regression.
+
+        Parameters:
+            Y (numpy.ndarray): Correct labels for the input data, shape (1, m).
+            A (numpy.ndarray): Activated output of the output neuron, shape (1, m).
+
+        Notes:
+            Uses 1.0000001 - A instead of 1 - A to avoid division by zero errors.
+
+        Returns:
+            float: The logistic regression cost.
         """
         m = Y.shape[1]
-
-        log_loss = -1/m*np.sum(Y * np.log(A) + (1-Y)*(np.log(1.0000001-A)))
-
+        log_loss = -1/m * np.sum(Y * np.log(A) + (1 - Y) * (np.log(1.0000001 - A)))
         return log_loss
