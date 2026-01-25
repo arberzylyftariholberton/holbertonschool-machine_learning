@@ -1,20 +1,35 @@
 #!/usr/bin/env python3
-""" Performs a Neural Network binary classification"""
-
+"""Defines a Neural Network for binary classification with one hidden layer."""
 import numpy as np
 
 
 class NeuralNetwork:
     """
-    A class that defines a Neural Network performing binary classification
+    Represents a neural network with a single hidden layer for binary classification.
     """
 
     def __init__(self, nx, nodes):
         """
-        A constructor that takes number of input as nx and
-        nodes is the number of nodes found in the hidden layer
-        """
+        Initializes a NeuralNetwork instance with one hidden layer.
 
+        Parameters:
+            nx (int): Number of input features.
+            nodes (int): Number of nodes in the hidden layer.
+
+        Raises:
+            TypeError: If nx is not an integer.
+            ValueError: If nx is less than 1.
+            TypeError: If nodes is not an integer.
+            ValueError: If nodes is less than 1.
+
+        Public Attributes:
+            W1 (numpy.ndarray): Weights for the hidden layer, initialized randomly.
+            b1 (numpy.ndarray): Biases for the hidden layer, initialized to zeros.
+            A1 (float): Activated outputs for the hidden layer, initialized to 0.
+            W2 (numpy.ndarray): Weights for the output neuron, initialized randomly.
+            b2 (float): Bias for the output neuron, initialized to 0.
+            A2 (float): Activated output for the output neuron (prediction), initialized to 0.
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
