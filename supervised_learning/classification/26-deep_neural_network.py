@@ -47,38 +47,35 @@ class DeepNeuralNetwork:
 
     @property
     def L(self):
-        """
-        Getter function for The number of layers in the neural network
-        """
+        """Getter function for the number of layers in the neural network"""
         return self.__L
 
     @property
     def cache(self):
-        """
-        Getter function dictionary to hold all
-        intermediary values of the network
-        """
+        """Getter function for the dictionary holding all intermediary values of the network"""
         return self.__cache
 
     @property
     def weights(self):
-        """
-        Getter function dictionary to hold all weights
-        and biased of the network
-        """
+        """Getter function for the dictionary holding all weights and biases of the network"""
         return self.__weights
 
     def forward_prop(self, X):
         """
-        Function that Calculates the forward propagation
-        of the neural network
+        Calculates the forward propagation of the neural network
+
+        Parameters:
+            X (numpy.ndarray): input data of shape (nx, m)
+
+        Returns:
+            A (numpy.ndarray): activated output of the last layer
+            cache (dict): dictionary containing all intermediary values
         """
         self.__cache["A0"] = X
 
         for layer in range(1, self.__L + 1):
             W = self.__weights[f"W{layer}"]
             b = self.__weights[f"b{layer}"]
-
             A_prev = self.__cache[f"A{layer-1}"]
 
             Z = np.matmul(W, A_prev) + b
@@ -90,31 +87,47 @@ class DeepNeuralNetwork:
 
     def cost(self, Y, A):
         """
-        A function that Calculates the cost of the model
-        using logistic regression
+        Calculates the cost of the model using logistic regression
+
+        Parameters:
+            Y (numpy.ndarray): correct labels of shape (1, m)
+            A (numpy.ndarray): activated output of shape (1, m)
+
+        Returns:
+            cost (float): the logistic regression cost
         """
         m = Y.shape[1]
-
         log_loss = -1/m*np.sum(Y * np.log(A) + (1-Y)*(np.log(1.0000001-A)))
-
         return log_loss
 
     def evaluate(self, X, Y):
         """
-        A function that Evaluates the neural network's predictions
+        Evaluates the neural network's predictions
+
+        Parameters:
+            X (numpy.ndarray): input data of shape (nx, m)
+            Y (numpy.ndarray): correct labels of shape (1, m)
+
+        Returns:
+            prediction (numpy.ndarray): predicted labels of shape (1, m)
+            cost_value (float): cost of the predictions
         """
         A, _ = self.forward_prop(X)
-
         prediction = (A >= 0.5).astype(int)
-
         cost_value = self.cost(Y, A)
-
         return prediction, cost_value
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
-        A function that calculates one pass of
-        gradient descent on the neural network
+        Performs one pass of gradient descent on the neural network
+
+        Parameters:
+            Y (numpy.ndarray): correct labels of shape (1, m)
+            cache (dict): dictionary containing all intermediary values
+            alpha (float): learning rate
+
+        Updates:
+            self.__weights
         """
         m = Y.shape[1]
         weights_copy = self.__weights.copy()
@@ -133,17 +146,25 @@ class DeepNeuralNetwork:
             dW = (1/m) * np.matmul(dZ, A_prev.T)
             db = (1/m) * np.sum(dZ, axis=1, keepdims=True)
 
-            self.__weights[f"W{layer}"] = (
-                weights_copy[f"W{layer}"] - alpha * dW
-            )
-            self.__weights[f"b{layer}"] = (
-                weights_copy[f"b{layer}"] - alpha * db
-            )
+            self.__weights[f"W{layer}"] = weights_copy[f"W{layer}"] - alpha * dW
+            self.__weights[f"b{layer}"] = weights_copy[f"b{layer}"] - alpha * db
 
     def train(self, X, Y, iterations=5000, alpha=0.05,
               verbose=True, graph=True, step=100):
         """
-        A function that upgrades the train function
+        Trains the deep neural network
+
+        Parameters:
+            X (numpy.ndarray): input data of shape (nx, m)
+            Y (numpy.ndarray): correct labels of shape (1, m)
+            iterations (int): number of iterations to train
+            alpha (float): learning rate
+            verbose (bool): if True, prints cost every step iterations
+            graph (bool): if True, plots training cost after training
+            step (int): steps at which cost is printed and plotted
+
+        Returns:
+            evaluation (tuple): predicted labels and cost after training
         """
         if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
@@ -189,7 +210,14 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """
-        A function that saves the instance object to a file in pickle format
+        Saves the DeepNeuralNetwork instance to a file in pickle format
+
+        Parameters:
+            filename (str): the file to save the object to. If the filename
+                            does not end with '.pkl', it will be appended.
+
+        Behavior:
+            The instance is serialized using pickle and written to the given file.
         """
         if not filename.endswith(".pkl"):
             filename += ".pkl"
@@ -199,7 +227,17 @@ class DeepNeuralNetwork:
     @staticmethod
     def load(filename):
         """
-        A function that loads a pickled DeepNeuralNetwork object
+        Loads a pickled DeepNeuralNetwork object
+
+        Parameters:
+            filename (str): the file from which the object should be loaded
+
+        Returns:
+            DeepNeuralNetwork: the loaded instance if the file exists
+            None: if the file does not exist
+
+        Behavior:
+            Attempts to deserialize a DeepNeuralNetwork instance from the given file.
         """
         if not os.path.exists(filename):
             return None
