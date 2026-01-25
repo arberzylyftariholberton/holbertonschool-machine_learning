@@ -4,20 +4,29 @@
 """
 
 import numpy as np
+import matplotlib.pyplot as plt  # Required for graphing training cost
 
 
 class NeuralNetwork:
     """
-    A class that defines a Neural Network performing binary classification,
-    adding private instance attributes
+    Defines a Neural Network with one hidden layer for binary classification.
+    Includes private attributes for weights, biases, and activated outputs.
+    Provides methods for forward propagation, cost calculation, evaluation,
+    gradient descent, and enhanced training with verbose output and cost graphing.
     """
 
     def __init__(self, nx, nodes):
         """
-        A constructor that takes number of input as nx and
-        nodes is the number of nodes found in the hidden layer
-        """
+        Initializes a NeuralNetwork instance with one hidden layer.
 
+        Parameters:
+            nx (int): Number of input features.
+            nodes (int): Number of nodes in the hidden layer.
+
+        Raises:
+            TypeError: If nx or nodes is not an integer.
+            ValueError: If nx or nodes is less than 1.
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -37,125 +46,91 @@ class NeuralNetwork:
 
     @property
     def W1(self):
-        """
-        Getter function of the Weight vector for the hidden layer
-        """
-
+        """Getter for hidden layer weights."""
         return self.__W1
 
     @property
     def b1(self):
-        """
-        Getter function of The bias for the hidden layer
-        """
-
+        """Getter for hidden layer biases."""
         return self.__b1
 
     @property
     def A1(self):
-        """
-        Getter function of The activated output for the hidden layer
-        """
-
+        """Getter for hidden layer activated output."""
         return self.__A1
 
     @property
     def W2(self):
-        """
-        Getter function of the Weight vector for the output neuron
-        """
-
+        """Getter for output neuron weights."""
         return self.__W2
 
     @property
     def b2(self):
-        """
-        Getter function of The bias for the output neuron
-        """
-
+        """Getter for output neuron bias."""
         return self.__b2
 
     @property
     def A2(self):
-        """
-        Getter function of The activated output for the output neuron
-        """
-
+        """Getter for output neuron activated output."""
         return self.__A2
 
     def forward_prop(self, X):
-        """
-        A function that Calculates the forward propagation
-        of the neural network
-        """
-
+        """Calculates forward propagation for the neural network."""
         Z1 = np.matmul(self.__W1, X) + self.__b1
-
         self.__A1 = 1 / (1 + np.exp(-Z1))
-
         Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
-
         self.__A2 = 1 / (1 + np.exp(-Z2))
-
         return self.__A1, self.__A2
 
     def cost(self, Y, A):
-        """
-        A Function that Calculates the cost of the model
-        using logistic regression
-        """
-
+        """Calculates the logistic regression cost of predictions."""
         m = Y.shape[1]
-
-        log_loss = -1/m*np.sum(Y * np.log(A) + (1-Y)*(np.log(1.0000001-A)))
-
+        log_loss = -1/m * np.sum(Y * np.log(A) + (1-Y) * np.log(1.0000001 - A))
         return log_loss
 
     def evaluate(self, X, Y):
         """
-        A Function that Evaluates the neural network's predictions
+        Evaluates the network's predictions.
+
+        Returns:
+            tuple: (predicted labels, cost)
         """
-
-        A1, A2 = self.forward_prop(X)
-
+        _, A2 = self.forward_prop(X)
         prediction = (A2 >= 0.5).astype(int)
-
         cost_value = self.cost(Y, A2)
-
         return prediction, cost_value
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
-        """
-        A Function that Calculates one pass of
-        Gradient Descent on the neural network
-        """
-
+        """Performs one pass of gradient descent on the network."""
         m = Y.shape[1]
-
         grad_w2 = 1/m * np.matmul((A2-Y), A1.T)
         grad_b2 = 1/m * np.sum((A2-Y), axis=1, keepdims=True)
+        grad_w1 = 1/m * np.matmul((np.matmul(self.__W2.T, (A2-Y)) * (A1*(1-A1))), X.T)
+        grad_b1 = 1/m * np.sum((np.matmul(self.__W2.T, (A2-Y)) * (A1*(1-A1))),
+                               axis=1, keepdims=True)
 
-        grad_w1 = 1/m * np.matmul(
-            (np.matmul(self.__W2.T, (A2-Y)) * (A1 * (1-A1))),
-            X.T
-        )
-        grad_b1 = 1/m * np.sum(
-            (np.matmul(self.__W2.T, (A2-Y)) * (A1 * (1-A1))),
-            axis=1,
-            keepdims=True
-        )
-
-        self.__W1 = self.__W1 - alpha * grad_w1
-        self.__W2 = self.__W2 - alpha * grad_w2
-        self.__b1 = self.__b1 - alpha * grad_b1
-        self.__b2 = self.__b2 - alpha * grad_b2
+        self.__W1 -= alpha * grad_w1
+        self.__W2 -= alpha * grad_w2
+        self.__b1 -= alpha * grad_b1
+        self.__b2 -= alpha * grad_b2
 
     def train(self, X, Y, iterations=5000, alpha=0.05,
               verbose=True, graph=True, step=100):
         """
-        A Function That Returns The Upgraded Train Of The Neural Network
-        """
+        Trains the neural network using forward propagation and gradient descent.
 
+        Parameters:
+            X (numpy.ndarray): Input data.
+            Y (numpy.ndarray): Correct labels.
+            iterations (int): Number of iterations.
+            alpha (float): Learning rate.
+            verbose (bool): Print cost every `step` iterations.
+            graph (bool): Plot cost curve after training.
+            step (int): Steps interval for verbose output and graphing.
+
+        Returns:
+            tuple: Evaluation of training data (prediction, cost).
+        """
         if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -180,8 +155,8 @@ class NeuralNetwork:
         if verbose or graph:
             costs.append(c)
             iters.append(0)
-        if verbose:
-            print(f"Cost after 0 iterations: {c}")
+            if verbose:
+                print(f"Cost after 0 iterations: {c}")
 
         for i in range(1, iterations + 1):
             A1, A2 = self.forward_prop(X)
