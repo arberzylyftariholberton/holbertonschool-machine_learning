@@ -13,6 +13,7 @@ random.seed(SEED)
 np.random.seed(SEED)
 tf.random.set_seed(SEED)
 
+create_mini_batches = __import__('3-mini_batch').create_mini_batches
 
 
 def one_hot(Y, classes):
