@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Module to create mini-batches for training"""
-import numpy as np
 
 
 def create_mini_batches(X, Y, batch_size):
