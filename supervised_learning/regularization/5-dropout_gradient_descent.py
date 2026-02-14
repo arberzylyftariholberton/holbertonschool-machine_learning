@@ -22,31 +22,20 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
     """
     m = Y.shape[1]
 
+    m = Y.shape[1]
     dZ = cache['A' + str(L)] - Y
-    A_prev = cache['A' + str(L - 1)]
-    dW = np.matmul(dZ, A_prev.T) / m
-    db = np.sum(dZ, axis=1, keepdims=True) / m
 
-    weights['W' + str(L)] -= alpha * dW
-    weights['b' + str(L)] -= alpha * db
-
-    dA_prev = np.matmul(weights['W' + str(L)].T, dZ)
-
-    for layer in range(L - 1, 0, -1):
-        D = cache['D' + str(layer)]
-        dA = dA_prev * D
-        dA = dA / keep_prob
-
-        A = cache['A' + str(layer)]
-        dZ = dA * (1 - np.square(A))
-
+    for layer in range(L, 0, -1):
         A_prev = cache['A' + str(layer - 1)]
 
-        dW = np.matmul(dZ, A_prev.T) / m
-        db = np.sum(dZ, axis=1, keepdims=True) / m
+        dW = (1 / m) * np.matmul(dZ, A_prev.T)
+        db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
         weights['W' + str(layer)] -= alpha * dW
         weights['b' + str(layer)] -= alpha * db
 
         if layer > 1:
-            dA_prev = np.matmul(weights['W' + str(layer)].T, dZ)
+            dA = np.matmul(weights['W' + str(layer)].T, dZ)
+            dA = dA * cache['D' + str(layer - 1)]
+            dA = dA / keep_prob
+            dZ = dA * (1 - np.square(cache['A' + str(layer - 1)]))
