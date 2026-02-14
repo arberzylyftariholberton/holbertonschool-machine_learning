@@ -17,6 +17,6 @@ def l2_reg_cost(cost, model):
         accounting for L2 regularization
     """
 
-    l2_losses = model.losses
+    regularization_loss = model.losses
 
-    return tf.convert_to_tensor([cost + tf.reduce_sum(l2_losses)] + l2_losses)
+    return cost + regularization_loss
