@@ -34,4 +34,3 @@ def dropout_create_layer(prev, n, activation, keep_prob, training=True):
 
     output = dropout_layer(output, training=training)
     return output
-
