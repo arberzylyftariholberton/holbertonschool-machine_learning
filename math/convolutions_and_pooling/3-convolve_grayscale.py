@@ -1,45 +1,49 @@
 #!/usr/bin/env python3
-"""Module for grayscale convolution with padding and stride"""
+"""
+    A script that performs a strided convolution on grayscale images
+"""
+
 import numpy as np
 
 
 def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     """
-    Performs a convolution on grayscale images
+        A function that performs a convolution on grayscale images
 
-    Args:
-        images: numpy.ndarray shape (m, h, w) - grayscale images
-        kernel: numpy.ndarray shape (kh, kw) - convolution kernel
-        padding: 'same', 'valid', or tuple (ph, pw)
-        stride: tuple (sh, sw) - stride for height and width
+        :param images: ndarray, shape(m, h, w), multiple grayscale images
+        :param kernel: ndarray, shape(kh,kw), kernel for convolution
+        :param padding: tuple (ph,pw) and 'same" or "valid'
+        :param stride: tuple (sh, sw)
 
-    Returns:
-        numpy.ndarray containing the convolved images
+        :return: ndarray containing convolved images
     """
     m, h, w = images.shape
     kh, kw = kernel.shape
     sh, sw = stride
 
-    if padding == 'same':
-        ph = ((h - 1) * sh + kh - h) // 2
-        pw = ((w - 1) * sw + kw - w) // 2
-    elif padding == 'valid':
+    if padding == 'valid':
         ph, pw = 0, 0
-    else:
+    elif padding == 'same':
+        ph = int((((h - 1) * sh + kh - h)/2) + 1)
+        pw = int((((w - 1) * sw + kw - w)/2) + 1)
+
+    elif isinstance(padding, tuple):
         ph, pw = padding
 
-    oh = (h + 2 * ph - kh) // sh + 1
-    ow = (w + 2 * pw - kw) // sw + 1
+    output_height = int((h - kh + 2 * ph) / sh + 1)
+    output_width = int((w - kw + 2 * pw) / sw + 1)
 
-    padded = np.pad(images, ((0, 0), (ph, ph), (pw, pw)), mode='constant')
+    convolved_images = np.zeros((m, output_height, output_width))
 
-    output = np.zeros((m, oh, ow))
+    image_pad = np.pad(images,
+                       ((0, 0), (ph, ph),
+                        (pw, pw)), mode='constant')
 
-    for i in range(oh):
-        for j in range(ow):
-            output[:, i, j] = np.sum(
-                padded[:, i * sh:i * sh + kh, j * sw:j * sw + kw] * kernel,
-                axis=(1, 2)
-            )
+    for i in range(output_height):
+        for j in range(output_width):
+            image_zone = image_pad[:, i * sh:i * sh + kh, j * sw:j * sw + kw]
 
-    return output
+            convolved_images[:, i, j] = np.sum(image_zone * kernel,
+                                               axis=(1, 2))
+
+    return convolved_images
