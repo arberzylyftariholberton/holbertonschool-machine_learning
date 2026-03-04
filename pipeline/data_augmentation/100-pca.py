@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """PCA Color Augmentation as described in the AlexNet paper"""
 import tensorflow as tf
-import numpy as np
 
 
 def pca_color(image, alphas):
@@ -13,32 +12,34 @@ def pca_color(image, alphas):
         alphas: tuple of length 3 - magnitude of change per channel
 
     Returns:
-        Augmented image as a tf.Tensor (clipped to valid pixel range)
+        Augmented image as a tf.Tensor clipped to [0, 255]
     """
-    # Convert to float32 numpy for PCA computation
-    img = tf.cast(image, tf.float32).numpy()
+    # Cast to float32 and reshape to (N, 3)
+    img = tf.cast(image, tf.float32)
+    shape = tf.shape(img)
+    pixels = tf.reshape(img, [-1, 3])
 
-    # Reshape to (N, 3) where N = H * W
-    h, w, c = img.shape
-    pixels = img.reshape(-1, c)
-
-    # Compute mean and center the data
-    mean = pixels.mean(axis=0)
+    # Center the pixels
+    mean = tf.reduce_mean(pixels, axis=0)
     pixels_centered = pixels - mean
 
-    # Compute 3x3 covariance matrix of RGB channels
-    cov = np.cov(pixels_centered, rowvar=False)
+    # Compute 3x3 covariance matrix: C = (X^T X) / (N - 1)
+    n = tf.cast(tf.shape(pixels_centered)[0], tf.float32)
+    cov = tf.linalg.matmul(
+        pixels_centered, pixels_centered, transpose_a=True
+    ) / (n - 1.0)
 
-    # Eigendecomposition
-    eigenvalues, eigenvectors = np.linalg.eigh(cov)
+    # Eigendecomposition (eigh for symmetric matrices)
+    eigenvalues, eigenvectors = tf.linalg.eigh(cov)
 
-    # AlexNet perturbation: delta = P * (alpha * lambda)
-    alphas = np.array(alphas)
-    perturbation = eigenvectors @ (alphas * eigenvalues)
+    # AlexNet perturbation: P @ (alphas * lambdas)
+    alphas_tensor = tf.cast(tf.constant(alphas), tf.float32)
+    perturbation = tf.linalg.matvec(
+        eigenvectors, alphas_tensor * eigenvalues
+    )
 
-    # Add perturbation to every pixel
+    # Add perturbation to every pixel and reshape back
     img_augmented = img + perturbation
+    img_augmented = tf.clip_by_value(img_augmented, 0.0, 255.0)
 
-    # Clip to valid range and return as tf.Tensor
-    img_augmented = np.clip(img_augmented, 0, 255).astype(np.uint8)
-    return tf.convert_to_tensor(img_augmented)
+    return tf.cast(img_augmented, tf.uint8)
