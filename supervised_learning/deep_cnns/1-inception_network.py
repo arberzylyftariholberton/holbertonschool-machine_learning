@@ -3,6 +3,8 @@
 
 from tensorflow import keras as K
 
+inception_block = __import__('0-inception_block').inception_block
+
 
 def inception_network():
     """Builds the Inception (GoogLeNet) network architecture.
