@@ -1,33 +1,34 @@
 #!/usr/bin/env python3
-"""Module that builds and trains a FastText model."""
+"""
+A script that contains the function fasttext_model()
+"""
+
 import gensim
 
 
-def fasttext_model(sentences, vector_size=100, min_count=5, negative=5,
-                   window=5, cbow=True, epochs=5, seed=0, workers=1):
-    """Create, build, and train a FastText model.
-
-    Args:
-        sentences (list): List of tokenized sentences.
-        vector_size (int): Dimensionality of embeddings.
-        min_count (int): Minimum word frequency.
-        negative (int): Size of negative sampling.
-        window (int): Maximum distance between current and predicted word.
-        cbow (bool): True for CBOW, False for Skip-gram.
-        epochs (int): Number of training epochs.
-        seed (int): Random seed.
-        workers (int): Number of worker threads.
-
-    Returns:
-        gensim.models.FastText: Trained gensim FastText model.
+def fasttext_model(sentences, vector_size=100, min_count=5,
+                   window=5, negative=5, cbow=True,
+                   epochs=5, seed=0, workers=1):
     """
-    model = gensim.models.FastText(sentences=sentences,
-                                   vector_size=vector_size,
-                                   min_count=min_count,
-                                   window=window,
-                                   negative=negative,
-                                   sg=0 if cbow else 1,
-                                   epochs=epochs,
-                                   seed=seed,
-                                   workers=workers)
+    A function that creates and trains a gensim FastText model:
+    """
+    sg = 0 if cbow else 1
+
+    model = gensim.models.FastText(
+        sentences=sentences,
+        vector_size=vector_size,
+        min_count=min_count,
+        window=window,
+        negative=negative,
+        sg=sg,
+        epochs=epochs,
+        seed=seed,
+        workers=workers
+        )
+
+    model.build_vocab(sentences)
+
+    model.train(sentences, total_examples=model.corpus_count,
+                epochs=model.epochs)
+
     return model
